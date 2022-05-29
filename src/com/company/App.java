@@ -10,6 +10,8 @@ public class App {
     private File file = new File();
     private Library library = new Library();
 
+    public App() throws Exception {}
+
     public void start() throws Exception {
         while(true) {
             Scanner in = new Scanner(System.in);
@@ -22,7 +24,8 @@ public class App {
         String[] split = input.split(" ");
         switch(split[0]) {
             case "open":
-                file.open(split[1]);
+                if (enoughArguments(2, split))
+                    file.open(split[1]);
                 break;
             case "close":
                 file.close();
@@ -31,7 +34,8 @@ public class App {
                 file.save();
                 break;
             case "saveas":
-                file.saveAs(split[1]);
+                if (enoughArguments(2, split))
+                    file.save(split[1]);
                 break;
             case "help":
                 help();
@@ -44,53 +48,64 @@ public class App {
                     user.logout();
                 break;
             case "books":
-                switch(split[1]) {
-                    case "all":
-                        if(user.isLoggedIn())
-                            library.allBooks();
-                        break;
-                    case "info":
-                        if(user.isLoggedIn())
-                            library.info(split[2]);
-                        break;
-                    case "find":
-                        if(user.isLoggedIn())
-                            library.find(split[2], split[3]);
-                        break;
-                    case "sort":
-                        if(user.isLoggedIn()) {
-                            if (split.length == 3)
-                                library.sort(split[2]);
-                            else
-                                library.sort(split[2], split[3]);
-                        }
-                        break;
-                    case "add":
-                        if(user.isLoggedIn() && user.isAdmin())
-                            library.add();
-                        break;
-                    case "remove":
-                        if(user.isLoggedIn() && user.isAdmin())
-                            library.remove(Integer.parseInt(split[1]));
-                        break;
+                if(enoughArguments(2, split)) {
+                    switch(split[1]) {
+                        case "all":
+                            if(user.isLoggedIn())
+                                library.allBooks();
+                            break;
+                        case "info":
+                            if(user.isLoggedIn() && enoughArguments(3, split))
+                                library.info(split[2]);
+                            break;
+                        case "find":
+                            if(user.isLoggedIn() && enoughArguments(3, split))
+                                library.find(split[2], split);
+                            break;
+                        case "sort":
+                            if(user.isLoggedIn() && enoughArguments(3, split)) {
+                                if (split.length == 3)
+                                    library.sort(split[2]);
+                                else
+                                    library.sort(split[2], split[3]);
+                            }
+                            break;
+                        case "add":
+                            if(user.isLoggedIn() && user.checkPermission())
+                                library.add();
+                            break;
+                        case "remove":
+                            if(user.isLoggedIn() && user.checkPermission() && enoughArguments(3, split))
+                                library.remove(split[2]);
+                            break;
+                        default:
+                            wrongCommand();
+                            break;
+                    }
                 }
                 break;
             case "users":
-                switch(split[1]) {
-                    case "add":
-                        user.add(split[2], split[3]);
-                        break;
-                    case "remove":
-                        user.remove(split[2]);
-                        break;
+                if (enoughArguments(2, split)) {
+                    switch (split[1]) {
+                        case "add":
+                            if (enoughArguments(4, split))
+                                user.add(split[2], split[3]);
+                            break;
+                        case "remove":
+                            if (enoughArguments(3, split))
+                                user.remove(split[2]);
+                            break;
+                        default:
+                            wrongCommand();
+                            break;
+                    }
                 }
                 break;
             case "exit":
-                library.save();
+                System.out.println("Exiting the program...");
                 System.exit(0);
             default:
-                System.out.println("No such command!");
-                System.out.println("Type \"help\" to check command options!");
+                wrongCommand();
                 break;
         }
     }
@@ -111,7 +126,25 @@ public class App {
         System.out.println("books sort <option> [asc | desc]         prints sorted list of books");
         System.out.println("books add                                adds new book");
         System.out.println("books remove <number>                    removes a book by its number");
-        System.out.println("user add <user> <password>               creates new user");
-        System.out.println("user remove <user>                       removes a user");
+        System.out.println("users add <user> <password>              creates new user");
+        System.out.println("users remove <user>                      removes a user");
+    }
+
+    public void wrongCommand() {
+        System.out.println("No such command!");
+        helpMessage();
+    }
+
+    public boolean enoughArguments(int count, String[] split) {
+        if(split.length < count) {
+            System.out.println("Not enough arguments!");
+            helpMessage();
+            return false;
+        }
+        return true;
+    }
+
+    public void helpMessage() {
+        System.out.println("Type \"help\" to check command options!");
     }
 }

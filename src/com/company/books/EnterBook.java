@@ -9,21 +9,23 @@ public class EnterBook {
         Scanner in = new Scanner(System.in);
         String input;
 
+        System.out.println("Enter new book data.");
+        System.out.println("Just hit enter on the fields you want to skip.");
         System.out.print("Author: ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             bookBuilder.withAuthor(input);
         }
 
         System.out.print("Title: ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             bookBuilder.withTitle(input);
         }
 
         System.out.print("Genre: ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             if(input.equalsIgnoreCase("Literary fiction"))
                 bookBuilder.withGenre(Genre.LITERARY_FICTION);
             else if(input.equalsIgnoreCase("Mystery"))
@@ -58,32 +60,32 @@ public class EnterBook {
 
         System.out.print("Description: ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             bookBuilder.withDescription(input);
         }
 
         System.out.print("Year: ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             bookBuilder.withYear(Integer.parseInt(input));
         }
 
-        System.out.print("Keywords (comma separated): ");
+        System.out.print("tags (comma separated): ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             String[] split = input.split(",");
-            bookBuilder.withKeywords(split);
+            bookBuilder.withTags(split);
         }
 
         System.out.print("Rating: ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             bookBuilder.withRating(Float.parseFloat(input));
         }
 
         System.out.print("Number: ");
         input = in.nextLine();
-        if(input != "") {
+        if(!input.equals("")) {
             bookBuilder.withNumber(Integer.parseInt(input));
         }
 
