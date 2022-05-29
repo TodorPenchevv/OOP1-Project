@@ -6,7 +6,7 @@ public class BookBuilder {
     private Genre genre;
     private String description;
     private int year;
-    private String[] keywords;
+    private String[] tags;
     private float rating;
     private int number;
 
@@ -16,7 +16,7 @@ public class BookBuilder {
     }
 
     public BookBuilder withTitle(String title) {
-        this.author = title;
+        this.title = title;
         return this;
     }
 
@@ -35,8 +35,8 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder withKeywords(String[] keywords) {
-        this.keywords = keywords;
+    public BookBuilder withTags(String[] tags) {
+        this.tags = tags;
         return this;
     }
 
@@ -51,6 +51,6 @@ public class BookBuilder {
     }
 
     public Book build() {
-        return new Book(author, title, genre, description, year, keywords, rating, number);
+        return new Book(author, title, genre, description, year, tags, rating, number);
     }
 }
